@@ -117,7 +117,7 @@ def _profit_update(stock_filepath, sell_date_str, existing_ticker_ids):
     report_filepath = os.path.join(report_path, report_filename)
     print(f"Generating report: {report_filepath}")
 
-    investment_table  = pd.read_csv(stock_filepath, sep="\t", comment="#")
+    investment_table  = pd.read_csv(stock_filepath, sep=";", comment="#")
     total_invested_amount_in_euro = 0.0
     total_profit_in_usd = 0.0
     total_invested_amount_in_usd = 0.0
