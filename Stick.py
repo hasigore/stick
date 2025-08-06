@@ -83,7 +83,7 @@ def _profit_update(stock_filepath, sell_date_str, existing_ticker_ids):
     
     report_filename = f"investment-report-{sell_date_str}.txt"
     report_filepath = os.path.join(report_path, report_filename)
-    print(f"Generating report: {report_filepath}")
+    print(f"Generating report: {report_filepath}\n")
 
     investment_table  = pd.read_csv(stock_filepath, sep=";", comment="#")
     total_invested_amount_in_euro = 0.0
@@ -161,7 +161,7 @@ def _profit_update(stock_filepath, sell_date_str, existing_ticker_ids):
     total_workth_today_in_euro = total_worth_today_in_usd * usd_to_euro_rate_on_sell_date
     myprint(report_filepath, f"Total Investments today: {total_worth_today_in_usd:.0f}$ ({total_workth_today_in_euro:.0f}€)")
     total_profit_in_euro = total_profit_in_usd * usd_to_euro_rate_on_sell_date
-    myprint(report_filepath, f"\nTotal profit in {days} days: {total_profit_in_usd:.0f}$ ({total_profit_in_euro:.0f}€)")
+    myprint(report_filepath, f"\nTotal profit in {days} days: {total_profit_in_usd:.0f}$ ({total_profit_in_euro:.0f}€)\n")
     return existing_ticker_ids
 
 
