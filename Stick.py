@@ -20,23 +20,6 @@ class Stick:
         return hist['Close'].iloc[0]
 
 
-    def __get_current_price(self):
-        hist = self.ticker.history(period="1d")
-        if hist.empty:
-            raise ValueError(f"No current price data available for {self.ticker_id}")
-        
-        return hist['Close'].iloc[-1]
-
-
-    def __calculate_profit_BAK(self, invested, buy_date, sell_date):
-        buy_price_per_share = self.get_price_on_date(buy_date)
-        sell_price_per_share = self.get_price_on_date(sell_date)
-        shares_bought = invested / buy_price_per_share
-        sell_price = shares_bought * sell_price_per_share
-        profit = sell_price - invested
-        return profit
-
-
     def get_euro_to_usd_rate_on_date(self, date_str):
         date = datetime.strptime(date_str, "%Y-%m-%d")
         eur_usd_ticker = yf.Ticker("EURUSD=X")
@@ -47,22 +30,9 @@ class Stick:
         euro_to_usd_rate_on_date = float(eur_usd_history['Close'].iloc[0])
         return euro_to_usd_rate_on_date
     
+
     def get_usd_to_euro_rate_on_date(self, date_str):
         return 1.0 / self.get_euro_to_usd_rate_on_date(date_str)
-
-
-    def __get_current_usd_to_euro_rate(self):
-        eur_usd_ticker = yf.Ticker("EURUSD=X")
-        eur_usd_history = eur_usd_ticker.history(period="1d")
-        if eur_usd_history.empty:
-            raise ValueError("No data for EURUSD=X")
-        eur_usd_rate = 1 / float(eur_usd_history['Close'].iloc[0])
-        return eur_usd_rate
-
-
-    def __usd_to_euro_BAK(self, usd):
-        rate = self.get_current_usd_to_euro_rate()
-        return usd * rate
 
 
     def get_company_name(self):
@@ -83,12 +53,10 @@ def clear_output_file(output_filpath):
     with open(output_filpath, "w") as f:
         pass
 
+
 def days_between_dates(date1_str, date2_str):
-    # Parse the date strings
     date1 = datetime.strptime(date1_str, "%Y-%m-%d")
     date2 = datetime.strptime(date2_str, "%Y-%m-%d")
-
-    # Calculate the difference in days
     days_between = (date2 - date1).days
     return days_between
 
@@ -167,7 +135,6 @@ def _profit_update(stock_filepath, sell_date_str, existing_ticker_ids):
             profit_in_usd = sell_amount_in_usd - invested_amount_in_usd
             total_profit_in_usd = total_profit_in_usd + profit_in_usd
 
-            #profit_in_euro = current_amount_in_usd * currency_rate_sell_date - invested_amount_in_euro
             increased_percentage_of_stock = (sell_stock_price / buy_stock_price - 1.0) * 100.0
             performances.append((ticker_id, increased_percentage_of_stock))
             total_percentage_increased = total_percentage_increased + increased_percentage_of_stock
@@ -177,6 +144,7 @@ def _profit_update(stock_filepath, sell_date_str, existing_ticker_ids):
         except Exception as e:
             myprint(report_filepath,  f"{e}")
             continue
+
     sorted_perf = sorted(performances, key=lambda x: x[1], reverse=True)
     best_3 = sorted_perf[:3]
     worst_3 = sorted_perf[-3:]
